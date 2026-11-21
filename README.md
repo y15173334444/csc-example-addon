@@ -14,8 +14,8 @@ sitting beside the main repo and the electric-push addon:
 
 | 姊妹仓 / Sibling repo | 路径 / Path | 关系 / Relation |
 |---|---|---|
-| 主仓 Create: Schematic Compute | `../create-schematic-compute` | 编译期契约面（公开 API）+ 开发运行期本体 / the compile-time contract surface (public API) and the dev runtime body |
-| CSC: Electric Push（电推原型） | `../csc-electric-push` | 另一个附属、真实接入形态参照（自持图宿主 + Sable 执行面）/ the other addon and the live-integration reference (self-hosted graph host + Sable execution plane) |
+| 主仓 Create: Schematic Compute | `../create-schematic-compute` · [GitHub](https://github.com/y15173334444/create-schematic-compute) | 编译期契约面（公开 API）+ 开发运行期本体 / the compile-time contract surface (public API) and the dev runtime body |
+| CSC: Electric Push（电推原型） | `../csc-electric-push` · [GitHub](https://github.com/y15173334444/csc-electric-push) | 另一个附属、真实接入形态参照（自持图宿主 + Sable 执行面）/ the other addon and the live-integration reference (self-hosted graph host + Sable execution plane) |
 
 ## 演示内容 / What it demonstrates
 
