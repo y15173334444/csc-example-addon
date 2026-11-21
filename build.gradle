@@ -37,3 +37,30 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// neoforge.mods.toml 的 ${...} 占位符在打包期展开（与电推仓同款接线；不展开则
+// version 原样落成 "${mod_version}"，模组加载即失败）。
+// Expand the ${...} placeholders in neoforge.mods.toml at packaging time (the same
+// wiring as the electric-push addon; unexpanded, the version lands as the literal
+// "${mod_version}" and the mod fails to load).
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version       : minecraft_version,
+            minecraft_version_range : minecraft_version_range,
+            neo_version             : neo_version,
+            neo_version_range       : neo_version_range,
+            loader_version_range    : loader_version_range,
+            mod_id                  : mod_id,
+            mod_name                : mod_name,
+            mod_license             : mod_license,
+            mod_version             : mod_version,
+            mod_authors             : mod_authors,
+            mod_description         : mod_description,
+            csc_version_range       : csc_version_range,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
+}
