@@ -64,9 +64,14 @@ the device executes through kinetic power (a servo's angle; cyclic pitch varying
 revolution). The device shape is not yet decided, so no implementation lands until it is;
 the extension then follows the existing integration chain (custom nodes + admission).
 
-API 实验期至 1.4.0 冻结（签名与语义可变）：本仓依赖区间 `[1.3.0,1.4)`，与主仓对 Sable
-的写法同理——不替移植者承诺 1.4 以后的兼容。
+兼容性按 **API 自己的版本号** 判别（`api.ApiVersion.CURRENT`，与模组版本解耦）：本示例只用
+API 0.1.0 面，`init` 里以 `ApiVersion.isAtLeast(0, 1, 0)` 守门；`mods.toml` 的模组区间
+`[1.3.0,)` 只表达最低发行线，不拿它推断 API 兼容性。API 版本 0.x = experimental（签名与
+语义可变），首次破坏性变更升 1.0.0——那一刻才是首个稳定面的冻结点。
 
-The API stays experimental until the 1.4.0 freeze (signatures and semantics may change), so
-this repo pins `[1.3.0,1.4)` — the same reasoning as the main repo's Sable range; it does
-not promise compatibility past 1.4 on a copier's behalf.
+Compatibility is indexed by the **API's own version** (`api.ApiVersion.CURRENT`, decoupled
+from the mod version): this example uses the API 0.1.0 surface and gates on
+`ApiVersion.isAtLeast(0, 1, 0)` in `init`; the mod range `[1.3.0,)` only states the minimum
+release line and never implies API compatibility. API versions in 0.x are experimental
+(signatures and semantics may change); the first breaking change bumps to 1.0.0 — the freeze
+point of the first stable face.

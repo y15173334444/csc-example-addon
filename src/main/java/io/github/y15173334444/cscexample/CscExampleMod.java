@@ -1,5 +1,6 @@
 package io.github.y15173334444.cscexample;
 
+import io.github.y15173334444.create_schematic_compute.api.ApiVersion;
 import io.github.y15173334444.create_schematic_compute.api.CustomNodes;
 import io.github.y15173334444.create_schematic_compute.api.CustomNodeType;
 import net.minecraft.core.registries.Registries;
@@ -20,7 +21,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *       （{@code CustomNodeBehavior}）一次注册（{@link CustomNodes#register}）；</li>
  *   <li><b>名单制登记</b>：注册 ≠ 准入 —— 节点 id 还须经
  *       {@link CustomNodes#admitToHost} 登记进蓝图机的准入名单（默认拒绝——未登记的 id 进不了宿主）；</li>
- *   <li><b>提供方直连</b>：节点在求值回调里经宿主世界读自己的方块。</li>
+ *   <li><b>提供方直连</b>：节点在求值回调里经宿主世界读自己的方块；</li>
+ *   <li><b>API 版本门</b>：兼容性按 {@link ApiVersion#CURRENT} 判别（与模组版本解耦），
+ *       本示例只用 API 0.1.0 面，init 期守门。</li>
  * </ol>
  * 图内闭环：放置 {@link SignalProviderBlock}（右键调信号）→ 蓝图机图里放
  * {@code cscexample:signal} 节点（TEXT 参数填方块坐标 "x y z"）→ 连到 REDSTONE_OUT——
@@ -31,7 +34,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * schema plus evaluation behavior in one call; (2) roster enrolment — registering ≠
  * admitting, the node ids must also be enrolled into the blueprint host's roster
  * (default-deny — an id that is not enrolled cannot enter the host); (3) provider-direct exchange — the node reads its own block through
- * the host's world inside the callback. The in-game loop: place the signal provider
+ * the host's world inside the callback; (4) the API version gate — compatibility comes from
+ * ApiVersion.CURRENT, never from mod-version ranges (this example uses the 0.1.0 surface and
+ * gates in init). The in-game loop: place the signal provider
  * (right-click to step its signal), put the cscexample:signal node in a blueprint graph
  * (TEXT param = "x y z"), wire it to a REDSTONE_OUT — third-party block ↔ node ↔ graph ↔
  * output, same tick both ways. cscexample:heavy is the resumable heavy-node sample
@@ -60,6 +65,16 @@ public final class CscExampleMod {
             .of(SignalProviderBlockEntity::new, SIGNAL_PROVIDER.get()).build(null));
 
     public CscExampleMod(IEventBus modEventBus) {
+        // API 版本门：兼容性按 API 自己的版本号判别（ApiVersion 单源，与模组版本解耦），
+        // 本示例只使用 API 0.1.0 面（自定义节点注册 + 准入）。
+        // The API version gate: compatibility is indexed by the API's own version
+        // (ApiVersion is the single source, decoupled from the mod version); this example
+        // uses the 0.1.0 surface only (custom-node registration plus admission).
+        if (!ApiVersion.CURRENT.isAtLeast(0, 1, 0)) {
+            throw new IllegalStateException(
+                "CSC API 0.1.0 or newer is required, found " + ApiVersion.CURRENT);
+        }
+
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
