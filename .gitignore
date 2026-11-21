@@ -1,0 +1,17 @@
+# Gradle / 构建产物
+.gradle/
+build/
+out/
+run/
+runs/
+logs/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 本地放置的 CSC jar（构建时对主仓产物编译，见 build.gradle 与 README）
+# The locally staged CSC jar (compile happens against the main repo's output; see
+# build.gradle and the README).
+libs/

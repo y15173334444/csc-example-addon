@@ -1,0 +1,4 @@
+# 行尾不做转换：源码与资源按仓库字节原样进出（与主仓同一规则）。
+# No end-of-line conversion: sources and resources travel byte-identical (same rule as
+# the main repo).
+* -text

@@ -1,0 +1,39 @@
+plugins {
+    id 'net.neoforged.gradle.userdev' version '7.0.181'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+base {
+    archivesName = 'csc-example-addon'
+}
+
+group = 'io.github.y15173334444.cscexample'
+version = mod_version
+
+// 对主仓（create-schematic-compute）产出的 CSC jar 编译：本仓是独立仓库，与主仓、
+// 电推仓并列（兄弟目录布局）。缺 jar 时先在主仓 ./gradlew jar。
+// Compiles against the CSC jar the main repo (create-schematic-compute) produces. This is
+// a standalone repo sitting beside the main repo and the electric-push addon (sibling
+// directory layout). If the jar is missing, run ./gradlew jar in the main repo first.
+def cscJar = file("../create-schematic-compute/build/libs/create-schematic-compute-${csc_version}.jar")
+if (!cscJar.exists()) {
+    throw new GradleException(
+        "Create: Schematic Compute jar not found: ${cscJar}\n" +
+        "Build the main repo first:  ../create-schematic-compute/gradlew jar  (see README.md)")
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+    compileOnly files(cscJar)
+}
+
+// 单测（如有）需要 CSC jar 才能解析被引用的类型。
+// Unit tests (when present) need the CSC jar to resolve referenced types.
+tasks.named('test') {
+    useJUnitPlatform()
+}
